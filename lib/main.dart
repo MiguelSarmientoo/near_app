@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import './screens/routes/app_routes.dart';
+import './screens/splash_screen.dart';  // Importa el SplashScreen
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,8 +36,7 @@ class MyApp extends StatelessWidget {
             ),
             scaffoldBackgroundColor: const Color.fromARGB(255, 255, 255, 255),
           ),
-          // Si ya ha visto el Onboarding, muestra la pantalla de login o home
-          initialRoute: showOnboarding ? AppRoutes.intro1 : AppRoutes.login,
+          home: SplashScreen(showOnboarding: showOnboarding), 
           onGenerateRoute: AppRoutes.generateRoute,
           debugShowCheckedModeBanner: false,
         );
@@ -45,8 +45,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// Función que verifica si el Onboarding ya fue mostrado
 Future<bool> _shouldShowOnboarding() async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getBool('onboarding_seen') ?? true; // Si no existe, se muestra
+  return prefs.getBool('onboarding_seen') ?? true;
 }

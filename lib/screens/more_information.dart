@@ -9,13 +9,13 @@ class MoreInformationScreen extends StatelessWidget {
   final String image;
 
   const MoreInformationScreen({
-    Key? key,
+    super.key,
     required this.title,
     required this.latitude,
     required this.longitude,
     required this.description,
     required this.image,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -122,7 +122,7 @@ class MoreInformationScreen extends StatelessWidget {
                         ),
                       ),
                       child: const Text(
-                        'What If We Don\'t Avoid? Try NE-AR',
+                        'Want to see more? Try NE-AR On your Location',
                         style: TextStyle(color: Colors.white, fontSize: 16),
                       ),
                     ),

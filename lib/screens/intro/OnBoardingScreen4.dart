@@ -11,15 +11,15 @@ class OnboardingScreen4 extends StatelessWidget {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool('onboarding_seen', true);
 
-    Navigator.of(context).pushReplacementNamed(AppRoutes.login);
+    Navigator.of(context).pushReplacementNamed(AppRoutes.home);
   }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
-          // Imagen de fondo (opcional)
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(

@@ -1,6 +1,6 @@
+//lib/screens/routes/app_routes.dart
 import 'package:flutter/material.dart';
 import '../home_screen.dart' as HomeScreenModule;
-import '../login_screen.dart' as LoginScreenModule;
 import '../intro/OnBoardingScreen1.dart';
 import '../intro/OnBoardingScreen2.dart';
 import '../intro/OnBoardingScreen3.dart';
@@ -12,7 +12,6 @@ import '../marker_data.dart'; // Asegúrate de que esta importación sea correct
 
 class AppRoutes {
   static const String home = '/home';
-  static const String login = '/login';
   static const String intro1 = '/intro1'; 
   static const String intro2 = '/intro2'; 
   static const String intro3 = '/intro3'; 
@@ -25,8 +24,6 @@ class AppRoutes {
     switch (settings.name) {
       case home:
         return MaterialPageRoute(builder: (_) => HomeScreenModule.HomeScreen());
-      case login:
-        return MaterialPageRoute(builder: (_) => LoginScreenModule.LoginScreen());
       case intro1:
         return MaterialPageRoute(builder: (_) => OnboardingScreen1());
       case intro2:
@@ -51,7 +48,7 @@ class AppRoutes {
           ),
         );
       case arScreen: // Manejar la nueva ruta
-        return MaterialPageRoute(builder: (_) => ARScreen());
+        return MaterialPageRoute(builder: (_) => const ARScreen());
       default:
         return MaterialPageRoute(builder: (_) => OnboardingScreen1());
     }

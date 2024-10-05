@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace "com.example.near_app" // Aquí va tu namespace
+    namespace "com.example.near_app"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
