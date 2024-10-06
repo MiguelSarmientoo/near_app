@@ -71,9 +71,9 @@ class AppRoutes {
             ),
           );
         }
-        return _errorRoute(); // Manejo de errores
+        return _errorRoute();
       default:
-        return _errorRoute(); // Manejo de errores
+        return _errorRoute(); 
     }
   }
 

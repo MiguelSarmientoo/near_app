@@ -109,13 +109,12 @@ class _ARScreenState extends State<ARScreen> {
           // Center image
           Center(
             child: Image.asset(
-              'assets/images/glacieri.png', // Update with your image path
-              width: 350, // Adjust the size as needed
-              height: 350, // Adjust the size as needed
-              fit: BoxFit.contain, // Maintain aspect ratio
+              'assets/images/glacieri.png', 
+              width: 350,
+              height: 350,
+              fit: BoxFit.contain,
             ),
           ),
-          // Overlay clickable points on the image
           ...points.map((point) {
             return Positioned(
               left: point['position'].dx,
@@ -125,8 +124,8 @@ class _ARScreenState extends State<ARScreen> {
                   _showInfoDialog(context, point['info']);
                 },
                 child: Container(
-                  width: 20, // Size of the clickable point
-                  height: 20, // Size of the clickable point
+                  width: 20,
+                  height: 20, 
                   decoration: BoxDecoration(
                     color: Colors.red,
                     shape: BoxShape.circle,
@@ -135,7 +134,6 @@ class _ARScreenState extends State<ARScreen> {
               ),
             );
           }).toList(),
-          // Text at the bottom
           Positioned(
             bottom: 20,
             left: 20,

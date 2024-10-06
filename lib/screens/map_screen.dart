@@ -64,7 +64,7 @@ class _MapScreenState extends State<MapScreen> {
 
         if (locations.isNotEmpty) {
           setState(() {
-            _suggestions = locations.map((loc) => '${loc.latitude}, ${loc.longitude}').toList();
+            _suggestions = locations.map((loc) => loc.toString()).toList(); // Muestra el nombre de la ubicación
           });
 
           final firstLocation = locations.first;
@@ -130,112 +130,139 @@ void _showPlaceInfo(LatLng point, String title) {
   );
 }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'World Map',
-          style: TextStyle(
-            color: Colors.white,
+  void _showInfoDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Tip for Using the Map'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: [
+                Text('1. Try moving around the map if it does not  load'),
+                Text('2. Do not click on locations before the map loads.'),
+                Text('3. Verify that the location is allowed in the settings.'),
+                Text('4. Click on the circle inside the location icons, and it will display the information.'),
+              ],
+            ),
           ),
-        ),
-        backgroundColor: const Color(0xFF3F22BA),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          actions: [
+            TextButton(
+              child: Text('Cerrar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(
+      title: const Text(
+        'World Map',
+        style: TextStyle(
+          color: Colors.white,
         ),
       ),
-      body: Stack(
-        children: [
-          _currentPosition == null || !_isMapReady
-              ? const Center(child: CircularProgressIndicator())
-              : FlutterMap(
-                  mapController: _mapController,
-                  options: MapOptions(
-                    onMapReady: () {
-                      if (_currentPosition != null) {
-                        _mapController.move(
-                          LatLng(_currentPosition!.latitude, _currentPosition!.longitude),
-                          15.0,
-                        );
-                      }
-                    },
-                    onTap: (tapPosition, point) {
-                      print('Tapped on: $point');
-                    },
+      backgroundColor: const Color(0xFF3F22BA),
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back, color: Colors.white),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      ),
+    ),
+    body: Stack(
+      children: [
+        _currentPosition == null || !_isMapReady
+            ? const Center(child: CircularProgressIndicator())
+            : FlutterMap(
+                mapController: _mapController,
+                options: MapOptions(
+                  onMapReady: () {
+                    if (_currentPosition != null) {
+                      _mapController.move(
+                        LatLng(_currentPosition!.latitude, _currentPosition!.longitude),
+                        15.0,
+                      );
+                    }
+                  },
+                  onTap: (tapPosition, point) {
+                    print('Tapped on: $point');
+                  },
+                ),
+                children: [
+                  TileLayer(
+                    urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                   ),
-                  children: [
-                    TileLayer(
-                      urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                    ),
-                    MarkerLayer(
-                      markers: [
-                        // Usar los datos de marker_data.dart
-                        ...widget.markers.map((marker) => Marker(
-                          point: marker.position,
+                  MarkerLayer(
+                    markers: [
+                      ...widget.markers.map((marker) => Marker(
+                        point: marker.position,
+                        width: 20,
+                        height: 20,
+                        child: GestureDetector(
+                          onTap: () => _showPlaceInfo(marker.position, marker.title),
+                          child: const Icon(Icons.location_on, color: Colors.red, size: 40),
+                        ),
+                      )),
+                      if (_currentPosition != null)
+                        Marker(
+                          point: LatLng(_currentPosition!.latitude, _currentPosition!.longitude),
                           width: 20,
                           height: 20,
-                          child: GestureDetector(
-                            onTap: () => _showPlaceInfo(marker.position, marker.title),
-                            child: const Icon(Icons.location_on, color: Colors.red, size: 40),
-                          ),
-                        )),
-                        if (_currentPosition != null)
-                          Marker(
-                            point: LatLng(_currentPosition!.latitude, _currentPosition!.longitude),
-                            width: 20,
-                            height: 20,
-                            child: const Icon(Icons.circle, color: Color.fromARGB(131, 39, 2, 107), size: 30),
-                          ),
-                      ],
-                    ),
-                  ],
-                ),
-          Positioned(
-            bottom: 20,
-            left: 20,
-            right: 20,
-            child: Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    spreadRadius: 3,
-                    blurRadius: 7,
+                          child: const Icon(Icons.circle, color: Color.fromARGB(131, 39, 2, 107), size: 30),
+                        ),
+                    ],
                   ),
                 ],
               ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      onChanged: (value) {
-                        setState(() {
-                          _searchQuery = value;
-                        });
-                      },
-                      decoration: InputDecoration(
-                        hintText: 'Search for a place...',
-                        border: InputBorder.none,
-                        suffixIcon: IconButton(
-                          icon: const Icon(Icons.search),
-                          onPressed: () {
-                            _searchPlaces(_searchQuery);
-                          },
-                        ),
+        Positioned(
+          bottom: 20,
+          left: 20,
+          right: 20,
+          child: Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  spreadRadius: 3,
+                  blurRadius: 7,
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    onChanged: (value) {
+                      setState(() {
+                        _searchQuery = value;
+                      });
+                    },
+                    decoration: InputDecoration(
+                      hintText: 'Search for a place...',
+                      border: InputBorder.none,
+                      suffixIcon: IconButton(
+                        icon: const Icon(Icons.search),
+                        onPressed: () {
+                          _searchPlaces(_searchQuery);
+                        },
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
+        ),
         if (_suggestions.isNotEmpty)
           Positioned(
             top: 100,
@@ -273,64 +300,76 @@ void _showPlaceInfo(LatLng point, String title) {
               ),
             ),
           ),
-          Positioned(
-            top: 20,
-            right: 20,
-            child: GestureDetector(
-              onTap: () {
-                setState(() {
-                  _isLegendExpanded = !_isLegendExpanded;
-                });
-              },
-              child: Container(
-                padding: const EdgeInsets.all(8),
-                color: Colors.white,
-                child: Row(
-                  children: [
-                    Text("Markers: ${widget.markers.length}"),
-                    Icon(_isLegendExpanded
-                        ? Icons.arrow_drop_up
-                        : Icons.arrow_drop_down),
-                  ],
-                ),
+        Positioned(
+          top: 20,
+          right: 20,
+          child: GestureDetector(
+            onTap: () {
+              _showInfoDialog(); // Llama a la función para mostrar la información
+            },
+            child: Container(
+              padding: const EdgeInsets.all(8),
+              color: Colors.white,
+              child: const Icon(Icons.info, color: Colors.black), // Botón de información
+            ),
+          ),
+        ),
+        Positioned(
+          top: 20,
+          right: 80, // Ajusta la posición para que no se superponga
+          child: GestureDetector(
+            onTap: () {
+              setState(() {
+                _isLegendExpanded = !_isLegendExpanded;
+              });
+            },
+            child: Container(
+              padding: const EdgeInsets.all(8),
+              color: Colors.white,
+              child: Row(
+                children: [
+                  Text("Markers: ${widget.markers.length}"),
+                  Icon(_isLegendExpanded ? Icons.arrow_drop_up : Icons.arrow_drop_down),
+                ],
               ),
             ),
           ),
-          if (_isLegendExpanded)
-            Positioned(
-              top: 70,
-              right: 20,
-              child: Container(
-                width: 200,
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      spreadRadius: 3,
-                      blurRadius: 7,
-                    ),
-                  ],
-                ),
-                child: Column(
-                  children: widget.markers.map((marker) {
-                    return ListTile(
-                      title: Text(marker.title),
-                      onTap: () {
-                        _mapController.move(marker.position, 15.0);
-                        setState(() {
-                          _isLegendExpanded = false; // Cerrar leyenda al seleccionar
-                        });
-                      },
-                    );
-                  }).toList(),
-                ),
+        ),
+        if (_isLegendExpanded)
+          Positioned(
+            top: 70,
+            right: 20,
+            child: Container(
+              width: 200,
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    spreadRadius: 3,
+                    blurRadius: 7,
+                  ),
+                ],
+              ),
+              child: Column(
+                children: widget.markers.map((marker) {
+                  return ListTile(
+                    title: Text(marker.title),
+                    onTap: () {
+                      _mapController.move(marker.position, 15.0);
+                      setState(() {
+                        _isLegendExpanded = false; // Cerrar leyenda al seleccionar
+                      });
+                    },
+                  );
+                }).toList(),
               ),
             ),
-        ],
-      ),
-    );
-  }
+          ),
+      ],
+    ),
+  );
+}
 }

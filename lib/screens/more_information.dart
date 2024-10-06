@@ -1,4 +1,3 @@
-// lib/screens/more_information.dart
 import 'package:flutter/material.dart';
 import 'package:near_app/screens/routes/app_routes.dart'; // Asegúrate de tener la importación correcta
 import 'package:latlong2/latlong.dart'; // Importar LatLng si es necesario
@@ -30,7 +29,7 @@ class MoreInformationScreen extends StatefulWidget {
 }
 
 class _MoreInformationScreenState extends State<MoreInformationScreen> {
-  late PageController _pageController; // Marcamos como 'late'
+  late PageController _pageController;
   int _currentPage = 1; // Comenzamos en la imagen actual (índice 1)
 
   @override
@@ -77,24 +76,22 @@ class _MoreInformationScreenState extends State<MoreInformationScreen> {
       ),
       body: Stack(
         children: [
-          Positioned.fill(
-            child: Image.asset(
-              widget.image,
-              fit: BoxFit.cover,
-            ),
+          Image.asset(
+            widget.image,
+            fit: BoxFit.cover,
+            width: double.infinity,
+            height: double.infinity,
           ),
-          Positioned.fill(
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Colors.black.withOpacity(0.7),
-                    Colors.black.withOpacity(0.5),
-                    Colors.black.withOpacity(0.3),
-                  ],
-                  begin: Alignment.bottomCenter,
-                  end: Alignment.topCenter,
-                ),
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Colors.black.withOpacity(0.7),
+                  Colors.black.withOpacity(0.5),
+                  Colors.black.withOpacity(0.3),
+                ],
+                begin: Alignment.bottomCenter,
+                end: Alignment.topCenter,
               ),
             ),
           ),
@@ -143,13 +140,14 @@ class _MoreInformationScreenState extends State<MoreInformationScreen> {
                       PageView(
                         controller: _pageController,
                         onPageChanged: (index) {
-                          _currentPage = index;
-                          setState(() {});
+                          setState(() {
+                            _currentPage = index;
+                          });
                         },
                         children: [
-                          _buildBackgroundImage(widget.pastImage),
-                          _buildBackgroundImage(widget.image),
-                          _buildBackgroundImage(widget.futureImage),
+                          _buildBackgroundImage(widget.pastImage, 'Past'),
+                          _buildBackgroundImage(widget.image, 'Present'),
+                          _buildBackgroundImage(widget.futureImage, 'Future'),
                         ],
                       ),
                       Positioned(
@@ -200,7 +198,7 @@ class _MoreInformationScreenState extends State<MoreInformationScreen> {
                             'pastImage': widget.pastImage,
                             'futureImage': widget.futureImage,
                             'howtoavoid': widget.howtoavoid,
-                          }, // Pasamos los argumentos necesarios
+                          }, 
                         );
                       },
                       style: ElevatedButton.styleFrom(
@@ -248,12 +246,36 @@ class _MoreInformationScreenState extends State<MoreInformationScreen> {
   }
 
   // Método para construir una página de imagen de fondo
-  Widget _buildBackgroundImage(String imagePath) {
-    return Positioned.fill(
-      child: Image.asset(
-        imagePath,
-        fit: BoxFit.cover,
-      ),
+  Widget _buildBackgroundImage(String imagePath, String label) {
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        Image.asset(
+          imagePath,
+          fit: BoxFit.cover,
+          width: double.infinity,
+          height: double.infinity,
+        ),
+        Positioned(
+          top: 20,
+          left: 20,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            decoration: BoxDecoration(
+              color: Colors.black54,
+              borderRadius: BorderRadius.circular(5),
+            ),
+            child: Text(
+              label,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
