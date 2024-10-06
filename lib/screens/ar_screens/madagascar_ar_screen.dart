@@ -12,21 +12,11 @@ class _MadagascarARScreenState extends State<MadagascarARScreen> {
   late CameraController cameraController;
   late Future<void> _initializeControllerFuture;
 
+  // Current image path
+  String currentImage = 'assets/images/mad.png'; // Default image for Madagascar
+
   // List of points with facts about Tsaranoro Massif
-  final List<Map<String, dynamic>> points = [
-    {
-      'position': Offset(150, 300), // x, y coordinates
-      'info': 'Fact 1: Tsaranoro Massif is known for its steep granite cliffs, making it a world-renowned rock climbing destination.',
-    },
-    {
-      'position': Offset(200, 300), // x, y coordinates
-      'info': 'Fact 2: Located near the Andringitra National Park, the massif offers breathtaking views of Madagascar\'s diverse landscapes.',
-    },
-    {
-      'position': Offset(250, 350), // x, y coordinates
-      'info': 'Fact 3: Tsaranoro is not only famous among climbers but is also a sacred place for the local Betsileo people, featuring important spiritual sites.',
-    },
-  ];
+  List<Map<String, dynamic>> points = [];
 
   @override
   void initState() {
@@ -77,6 +67,19 @@ class _MadagascarARScreenState extends State<MadagascarARScreen> {
     );
   }
 
+  // Function to update the image and add a new point (clear previous points)
+  void _updateImageAndAddDot(String imagePath, Offset position, String info) {
+    setState(() {
+      // Clear previous points (remove previous dots)
+      points.clear();
+      currentImage = imagePath;
+      points.add({
+        'position': position,
+        'info': info,
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -101,7 +104,7 @@ class _MadagascarARScreenState extends State<MadagascarARScreen> {
           // Center image
           Center(
             child: Image.asset(
-              'assets/images/mad.png', // Update with your image path
+              currentImage,
               width: 350, // Adjust the size as needed
               height: 350, // Adjust the size as needed
               fit: BoxFit.contain, // Maintain aspect ratio
@@ -127,6 +130,47 @@ class _MadagascarARScreenState extends State<MadagascarARScreen> {
               ),
             );
           }).toList(),
+          // Bottom buttons for Past, Present, Future
+          Positioned(
+            bottom: 70,
+            left: 20,
+            right: 20,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    _updateImageAndAddDot(
+                      'assets/images/mad_past.png', // Image for Past
+                      Offset(150, 300), // Set the desired position for the dot
+                      'Past: Tsaranoro Massif has long been a sacred site for the local Betsileo people, rich in cultural heritage.',
+                    );
+                  },
+                  child: const Text('Past'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    _updateImageAndAddDot(
+                      'assets/images/mad.png', // Image for Present
+                      Offset(200, 300), // Set the desired position for the dot
+                      'Present: Today, Tsaranoro Massif attracts climbers and tourists, boosting local tourism and economy.',
+                    );
+                  },
+                  child: const Text('Present'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    _updateImageAndAddDot(
+                      'assets/images/mad_future.png', // Image for Future
+                      Offset(250, 350), // Set the desired position for the dot
+                      'Future: With increased conservation efforts, Tsaranoro is set to preserve its unique biodiversity and climbing opportunities.',
+                    );
+                  },
+                  child: const Text('Future'),
+                ),
+              ],
+            ),
+          ),
           // Text at the bottom
           Positioned(
             bottom: 20,

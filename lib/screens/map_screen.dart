@@ -148,7 +148,7 @@ void _showPlaceInfo(LatLng point, String title) {
           ),
           actions: [
             TextButton(
-              child: Text('Cerrar'),
+              child: Text('Close'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -360,7 +360,7 @@ Widget build(BuildContext context) {
                     onTap: () {
                       _mapController.move(marker.position, 15.0);
                       setState(() {
-                        _isLegendExpanded = false; // Cerrar leyenda al seleccionar
+                        _isLegendExpanded = false;
                       });
                     },
                   );

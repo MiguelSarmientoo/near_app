@@ -33,16 +33,13 @@ class _SplashScreenState extends State<SplashScreen>
       duration: const Duration(milliseconds: 600),
     )..repeat(reverse: true);
 
-    // Inicializar la opacidad de los puntos
-    _dotOpacity = List.filled(_dotCount, 0.3); // Inicia con opacidad baja
+    _dotOpacity = List.filled(_dotCount, 0.3); 
 
-    // Animar los puntos
     _timer = Timer.periodic(const Duration(milliseconds: 600), (timer) {
       if (mounted) {
         setState(() {
-          // Cambia la opacidad de los puntos
           for (int i = 0; i < _dotCount; i++) {
-            _dotOpacity[i] = (i == (timer.tick % _dotCount)) ? 1.0 : 0.3; // Cambia solo el punto actual
+            _dotOpacity[i] = (i == (timer.tick % _dotCount)) ? 1.0 : 0.3; 
           }
         });
       }
@@ -50,17 +47,14 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   void _startSplashScreen() async {
-    // Muestra el logo durante 3 segundos
     await Future.delayed(const Duration(seconds: 3));
 
-    // Cambia a mostrar "cargando"
     setState(() {
-      _showLogo = false; // Desvanece el logo
-      _showLoading = true; // Muestra el cargando
+      _showLogo = false; 
+      _showLoading = true; 
     });
 
-    // Redirige basado en si ya vio el Onboarding
-    await Future.delayed(const Duration(seconds: 2)); // Espera 2 segundos para mostrar "cargando"
+    await Future.delayed(const Duration(seconds: 2)); 
     if (widget.showOnboarding) {
       Navigator.of(context).pushReplacementNamed(AppRoutes.intro1);
     } else {
@@ -70,15 +64,15 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   void dispose() {
-    _controller.dispose(); // Limpia el controlador de la animación
-    _timer?.cancel(); // Cancela el temporizador si está activo
+    _controller.dispose();
+    _timer?.cancel(); 
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black, // Establece el fondo a negro
+      backgroundColor: Colors.black, 
       body: Stack(
         children: [
           // Imagen del splash
@@ -87,20 +81,19 @@ class _SplashScreenState extends State<SplashScreen>
               opacity: _showLogo ? 1.0 : 0.0,
               duration: const Duration(milliseconds: 600),
               child: Image.asset(
-                'assets/images/logosplash.png', // Asegúrate de que esta ruta sea correcta
-                width: 250, // Ajusta el tamaño según sea necesario
+                'assets/images/logosplash.png', 
+                width: 250, 
                 height: 250,
               ),
             ),
           ),
-          // Footer con la imagen "Powered by"
           Align(
             alignment: Alignment.bottomCenter,
             child: Column(
-              mainAxisSize: MainAxisSize.min, // Minimiza el tamaño para ajustarse al contenido
+              mainAxisSize: MainAxisSize.min, 
               children: [
-                const SizedBox(height: 20), // Espacio entre la imagen y el footer
-                if (_showLoading) // Muestra solo si se está cargando
+                const SizedBox(height: 20),
+                if (_showLoading) 
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: List.generate(_dotCount, (index) {
@@ -118,22 +111,22 @@ class _SplashScreenState extends State<SplashScreen>
                       );
                     }),
                   ),
-                if (_showLoading) // Muestra la imagen de "Powered by" solo si se está cargando
+                if (_showLoading) 
                   Column(
                     children: [
-                      const SizedBox(height: 20), // Espacio entre los puntos y la imagen
+                      const SizedBox(height: 20), 
                       AnimatedOpacity(
                         opacity: _showLoading ? 1.0 : 0.0,
                         duration: const Duration(milliseconds: 600),
                         child: Image.asset(
-                          'assets/images/splash2.png', // Ruta de la imagen "Powered by"
-                          width: 100, // Ajusta el tamaño según sea necesario
+                          'assets/images/splash2.png',
+                          width: 100,
                           height: 100,
                         ),
                       ),
                     ],
                   ),
-                const SizedBox(height: 20), // Espacio inferior
+                const SizedBox(height: 20),
               ],
             ),
           ),

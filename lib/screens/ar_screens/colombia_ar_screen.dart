@@ -12,21 +12,11 @@ class _ColombiaARScreenState extends State<ColombiaARScreen> {
   late CameraController cameraController;
   late Future<void> _initializeControllerFuture;
 
+  // Default image path
+  String currentImage = 'assets/images/colombia.png'; // Default image for Colombia
+
   // List of points with Monserrate facts
-  final List<Map<String, dynamic>> points = [
-    {
-      'position': Offset(150, 300), // x, y coordinates
-      'info': 'Monserrate stands at 3,152 meters above sea level, offering stunning views of Bogotá. It is a major pilgrimage site with a church dedicated to "El Señor Caído" (The Fallen Lord).',
-    },
-    {
-      'position': Offset(200, 300), // x, y coordinates
-      'info': 'The mountain can be accessed via hiking trails, a funicular, or a cable car, making it one of Bogotá’s most popular tourist attractions.',
-    },
-    {
-      'position': Offset(250, 270), // x, y coordinates
-      'info': 'Monserrate’s summit has a restaurant and souvenir shops, allowing visitors to enjoy local food and take in the views while exploring the mountain.',
-    },
-  ];
+  List<Map<String, dynamic>> points = [];
 
   @override
   void initState() {
@@ -77,6 +67,19 @@ class _ColombiaARScreenState extends State<ColombiaARScreen> {
     );
   }
 
+  // Function to update the image and add a new point (clear previous points)
+  void _updateImageAndAddDot(String imagePath, Offset position, String info) {
+    setState(() {
+      // Clear previous points (remove previous dots)
+      points.clear();
+      currentImage = imagePath;
+      points.add({
+        'position': position,
+        'info': info,
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -98,16 +101,16 @@ class _ColombiaARScreenState extends State<ColombiaARScreen> {
               }
             },
           ),
-          // Center image
+          // Center image of Monserrate
           Center(
             child: Image.asset(
-              'assets/images/columbia.png', // Update with your image path
-              width: 350, // Adjust the size as needed
-              height: 350, // Adjust the size as needed
-              fit: BoxFit.contain, // Maintain aspect ratio
+              currentImage,
+              width: 350,
+              height: 350,
+              fit: BoxFit.contain,
             ),
           ),
-          // Overlay clickable points on the image
+          // Display dynamic red dots
           ...points.map((point) {
             return Positioned(
               left: point['position'].dx,
@@ -117,8 +120,8 @@ class _ColombiaARScreenState extends State<ColombiaARScreen> {
                   _showInfoDialog(context, point['info']);
                 },
                 child: Container(
-                  width: 20, // Size of the clickable point
-                  height: 20, // Size of the clickable point
+                  width: 20,
+                  height: 20,
                   decoration: BoxDecoration(
                     color: Colors.red,
                     shape: BoxShape.circle,
@@ -127,7 +130,46 @@ class _ColombiaARScreenState extends State<ColombiaARScreen> {
               ),
             );
           }).toList(),
-          // Text at the bottom
+          Positioned(
+            bottom: 70,
+            left: 20,
+            right: 20,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    _updateImageAndAddDot(
+                      'assets/images/mon_past.png', // Image for the past
+                      Offset(100, 300), // Position for the dot
+                      'Past: Monserrate has been a sacred place for centuries, revered by Indigenous people long before the Spanish arrived, serving as a spiritual and cultural landmark.',
+                    );
+                  },
+                  child: const Text('Past'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    _updateImageAndAddDot(
+                      'assets/images/mon.png', // Image for the present
+                      Offset(200, 330), // Position for the dot
+                      'Present: Today, Monserrate is a popular pilgrimage and tourist destination, offering panoramic views of Bogotá and showcasing its rich history and culture.',
+                    );
+                  },
+                  child: const Text('Present'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    _updateImageAndAddDot(
+                      'assets/images/mon_future.png', // Image for the future
+                      Offset(250, 300), // Position for the dot
+                      'Future: Continued development and tourism could enhance Monserrate’s accessibility, but it is crucial to balance modernization with the preservation of its cultural heritage.',
+                    );
+                  },
+                  child: const Text('Future'),
+                ),
+              ],
+            ),
+          ),
           Positioned(
             bottom: 20,
             left: 20,

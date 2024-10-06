@@ -25,13 +25,13 @@ class MyApp extends StatelessWidget {
             primarySwatch: Colors.blue,
             fontFamily: 'Montserrat',
             appBarTheme: const AppBarTheme(
-              backgroundColor: Color(0xFF3F22BA), // Color del encabezado
+              backgroundColor: Color(0xFF3F22BA),
               elevation: 0,
               centerTitle: true,
               titleTextStyle: TextStyle(
-                color: Colors.white, // Color del texto en el encabezado
-                fontSize: 20, // Ajusta el tamaño de fuente según sea necesario
-                fontWeight: FontWeight.bold, // Puedes cambiar el peso de la fuente si es necesario
+                color: Colors.white, 
+                fontSize: 20, 
+                fontWeight: FontWeight.bold, 
               ),
             ),
             scaffoldBackgroundColor: const Color.fromARGB(255, 255, 255, 255),
