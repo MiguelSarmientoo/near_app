@@ -1,4 +1,4 @@
-//lib/screens/routes/app_routes.dart
+// lib/screens/routes/app_routes.dart
 import 'package:flutter/material.dart';
 import '../home_screen.dart' as HomeScreenModule;
 import '../intro/OnBoardingScreen1.dart';
@@ -9,12 +9,17 @@ import '../map_screen.dart';
 import '../more_information.dart';
 import '../ar_screen.dart'; // Importar la nueva pantalla
 import '../marker_data.dart'; // Asegúrate de que esta importación sea correcta
+import '../ar_screens/mumbai_ar_screen.dart'; // Import your AR screens for each location
+import '../ar_screens/madagascar_ar_screen.dart';
+import '../ar_screens/colombia_ar_screen.dart';
+import '../ar_screens/coconut_creek_ar_screen.dart';
+import '../ar_screens/lima_ar_screen.dart';
 
 class AppRoutes {
   static const String home = '/home';
-  static const String intro1 = '/intro1'; 
-  static const String intro2 = '/intro2'; 
-  static const String intro3 = '/intro3'; 
+  static const String intro1 = '/intro1';
+  static const String intro2 = '/intro2';
+  static const String intro3 = '/intro3';
   static const String intro4 = '/intro4';
   static const String map = '/map';
   static const String moreInfo = '/more_info';
@@ -48,7 +53,21 @@ class AppRoutes {
           ),
         );
       case arScreen: // Manejar la nueva ruta
-        return MaterialPageRoute(builder: (_) => const ARScreen());
+        final locationName = settings.arguments as String;
+        switch (locationName) {
+          case 'Mumbai':
+            return MaterialPageRoute(builder: (_) => const MumbaiARScreen());
+          case 'Madagascar':
+            return MaterialPageRoute(builder: (_) => const MadagascarARScreen());
+          case 'Colombia':
+            return MaterialPageRoute(builder: (_) => const ColombiaARScreen());
+          case 'Coconut Creek':
+            return MaterialPageRoute(builder: (_) => const CoconutCreekARScreen());
+          case 'Lima, Peru':
+            return MaterialPageRoute(builder: (_) => const LimaARScreen());
+          default:
+            return MaterialPageRoute(builder: (_) => const LimaARScreen()); // Handle a default case if needed
+        }
       default:
         return MaterialPageRoute(builder: (_) => OnboardingScreen1());
     }

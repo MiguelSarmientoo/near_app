@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
-import 'package:flutter_cube/flutter_cube.dart';
 
 class ARScreen extends StatefulWidget {
   const ARScreen({super.key});
@@ -13,15 +12,27 @@ class _ARScreenState extends State<ARScreen> {
   late CameraController cameraController;
   late Future<void> _initializeControllerFuture;
 
-  // List of points with their information
+  // List of points with their information about Glacier National Park
   final List<Map<String, dynamic>> points = [
     {
-      'position': Offset(100, 200), // x, y coordinates
-      'info': 'Point 1: This is some information about Point 1.',
+      'position': Offset(150, 300), // x, y coordinates
+      'info': 'Fact 1: Glacier National Park covers over 1 million acres in Montana.',
     },
     {
-      'position': Offset(200, 300), // x, y coordinates
-      'info': 'Point 2: This is some information about Point 2.',
+      'position': Offset(200, 350), // x, y coordinates
+      'info': 'Fact 2: The park is home to over 700 species of plants and 100 species of mammals.',
+    },
+    {
+      'position': Offset(250, 400), // x, y coordinates
+      'info': 'Fact 3: It is known for its stunning glaciers, although many have retreated significantly due to climate change.',
+    },
+    {
+      'position': Offset(300, 450), // x, y coordinates
+      'info': 'Fact 4: The park features over 700 miles of hiking trails.',
+    },
+    {
+      'position': Offset(350, 500), // x, y coordinates
+      'info': 'Fact 5: Glacier National Park is part of the larger Waterton-Glacier International Peace Park.',
     },
     // Add more points as needed
   ];
@@ -96,7 +107,16 @@ class _ARScreenState extends State<ARScreen> {
               }
             },
           ),
-          // Overlay clickable points
+          // Center image
+          Center(
+            child: Image.asset(
+              'assets/images/glacieri.png', // Update with your image path
+              width: 350, // Adjust the size as needed
+              height: 350, // Adjust the size as needed
+              fit: BoxFit.contain, // Maintain aspect ratio
+            ),
+          ),
+          // Overlay clickable points on the image
           ...points.map((point) {
             return Positioned(
               left: point['position'].dx,
@@ -116,24 +136,6 @@ class _ARScreenState extends State<ARScreen> {
               ),
             );
           }).toList(),
-          // Add 3D model
-          Positioned(
-            left: 100, // Adjust this value to position your 3D model
-            top: 100, // Adjust this value to position your 3D model
-            child: SizedBox(
-              width: 150, // Adjust the size of the 3D model
-              height: 150, // Adjust the size of the 3D model
-              child: Cube(
-                onSceneCreated: (Scene scene) {
-                  scene.world.add(Object(
-                    fileName: 'assets/images/Globe.obj', // Update with your model's path
-                    scale: Vector3(1.0, 1.0, 1.0), // Adjust scale as needed
-                    position: Vector3(0.0, 0.0, 0.0), // Center the model in the scene
-                  ));
-                },
-              ),
-            ),
-          ),
           // Text at the bottom
           Positioned(
             bottom: 20,

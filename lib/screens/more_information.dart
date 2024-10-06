@@ -111,7 +111,8 @@ class MoreInformationScreen extends StatelessWidget {
                       onPressed: () {
                         Navigator.pushNamed(
                           context,
-                          AppRoutes.arScreen, // Navegar a la nueva pantalla AR
+                          AppRoutes.arScreen,
+                          arguments: title, // Pass the location name
                         );
                       },
                       style: ElevatedButton.styleFrom(
