@@ -95,8 +95,13 @@ class _MoreInformationScreenState extends State<MoreInformationScreen> {
               ),
             ),
           ),
-          SingleChildScrollView( // Wrap the content in a SingleChildScrollView
-            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
+          SingleChildScrollView(
+            padding: const EdgeInsets.only(
+              left: 20.0, 
+              right: 20.0, 
+              top: 100.0, // Increased padding for the top to avoid overlapping with AppBar
+              bottom: 40.0
+            ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -252,7 +257,7 @@ class _MoreInformationScreenState extends State<MoreInformationScreen> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 40), // Increased space for footer separation
               ],
             ),
           ),

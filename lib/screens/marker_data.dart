@@ -75,4 +75,13 @@ final List<MarkerData> markers = [
     futureImage: 'assets/images/delhi_future.png',
     howtoavoid: 'To improve air quality in Delhi, it is essential to implement stricter emissions policies for industries and vehicles, as well as promote public transport and sustainable alternatives like cycling. 🚲🌳 Creating green spaces, such as urban parks and community gardens, will not only enhance air quality but also foster a sense of community. Awareness campaigns about environmental health and the use of air quality monitoring technologies will help keep the population informed about risks and actions they can take to mitigate pollution.',
   ),
+  MarkerData(
+    title: 'Pederson Glacier',
+    position: LatLng(59.5006, -147.7784), // Coordenadas del glaciar Pederson
+    description: 'Pederson Glacier, located in Alaska, is experiencing significant retreat due to climate change, contributing to rising sea levels and altering local ecosystems. The glacier has shrunk considerably over the past decades, impacting the region\'s biodiversity and traditional ways of life. ❄️🌍',
+    image: 'assets/images/pederson.jpg',
+    pastImage: 'assets/images/pederson_past.jpg',
+    futureImage: 'assets/images/pederson_future.png',
+    howtoavoid: 'To combat glacier retreat and its effects, it is vital to implement policies focused on reducing greenhouse gas emissions and promoting sustainable land use. Encouraging renewable energy sources and protecting natural habitats will help mitigate climate change impacts. 🌱🔋 Community involvement in conservation efforts and raising awareness about climate change can empower local populations to take action.',
+),
 ];
