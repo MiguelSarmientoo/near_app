@@ -12,29 +12,11 @@ class _ARScreenState extends State<ARScreen> {
   late CameraController cameraController;
   late Future<void> _initializeControllerFuture;
 
-  // List of points with their information about Glacier National Park
-  final List<Map<String, dynamic>> points = [
-    {
-      'position': Offset(150, 300), // x, y coordinates
-      'info': 'Fact 1: Glacier National Park covers over 1 million acres in Montana.',
-    },
-    {
-      'position': Offset(200, 350), // x, y coordinates
-      'info': 'Fact 2: The park is home to over 700 species of plants and 100 species of mammals.',
-    },
-    {
-      'position': Offset(250, 400), // x, y coordinates
-      'info': 'Fact 3: It is known for its stunning glaciers, although many have retreated significantly due to climate change.',
-    },
-    {
-      'position': Offset(300, 450), // x, y coordinates
-      'info': 'Fact 4: The park features over 700 miles of hiking trails.',
-    },
-    {
-      'position': Offset(350, 500), // x, y coordinates
-      'info': 'Fact 5: Glacier National Park is part of the larger Waterton-Glacier International Peace Park.',
-    },
-  ];
+  // Current image path
+  String currentImage = 'assets/images/glacieri.png';
+
+  // List of dynamically added points with their information
+  List<Map<String, dynamic>> points = [];
 
   @override
   void initState() {
@@ -85,6 +67,19 @@ class _ARScreenState extends State<ARScreen> {
     );
   }
 
+  // Function to update the image and add a new red dot (clear previous dots)
+  void _updateImageAndAddDot(String imagePath, Offset position, String info) {
+    setState(() {
+      // Clear previous points (remove previous dot)
+      points.clear();
+      currentImage = imagePath;
+      points.add({
+        'position': position,
+        'info': info,
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -106,15 +101,16 @@ class _ARScreenState extends State<ARScreen> {
               }
             },
           ),
-          // Center image
+          // Center image based on the selected timeline
           Center(
             child: Image.asset(
-              'assets/images/glacieri.png', 
+              currentImage,
               width: 350,
               height: 350,
               fit: BoxFit.contain,
             ),
           ),
+          // Display dynamic red dots
           ...points.map((point) {
             return Positioned(
               left: point['position'].dx,
@@ -125,7 +121,7 @@ class _ARScreenState extends State<ARScreen> {
                 },
                 child: Container(
                   width: 20,
-                  height: 20, 
+                  height: 20,
                   decoration: BoxDecoration(
                     color: Colors.red,
                     shape: BoxShape.circle,
@@ -134,6 +130,67 @@ class _ARScreenState extends State<ARScreen> {
               ),
             );
           }).toList(),
+          Positioned(
+            bottom: 70,
+            left: 20,
+            right: 20,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      _updateImageAndAddDot(
+                        'assets/images/1920glacier.png',
+                        Offset(150, 300), // Set the desired position for the dot
+                        'Past: Pedersen Glacier once extended into the lagoon, a massive ice field in the early 20th century.',
+                      );
+                    },
+                    child: const Text('1920'),
+                  ),
+                ),
+                const SizedBox(width: 10), // Space between buttons
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      _updateImageAndAddDot(
+                        'assets/images/2005glacier.png',
+                        Offset(200, 350), // Set the desired position for the dot
+                        'Past: Pedersen Glacier once extended into the lagoon, a massive ice field in the early 20th century.',
+                      );
+                    },
+                    child: const Text('2005'),
+                  ),
+                ),
+                const SizedBox(width: 10), // Space between buttons
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      _updateImageAndAddDot(
+                        'assets/images/futureglacier.png',
+                        Offset(250, 400), // Set the desired position for the dot
+                        'Future: Predicted to continue shrinking, possibly disappearing, affecting freshwater and ecosystems in the region.',
+                      );
+                    },
+                    child: const Text('Future'),
+                  ),
+                ),
+                const SizedBox(width: 10), // Space between buttons
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      _updateImageAndAddDot(
+                        'assets/images/glacieri.png',
+                        Offset(200, 350), // Set the desired position for the dot
+                        'Present: Rapidly retreating, with much of the glacier melted, leaving exposed land and an ice-free lagoon.',
+                      );
+                    },
+                    child: const Text('Now'),
+                  ),
+                ),
+              ],
+            ),
+          ),
           Positioned(
             bottom: 20,
             left: 20,

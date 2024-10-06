@@ -10,16 +10,28 @@ import '../more_information.dart';
 import '../ar_screen.dart';
 import '../how_to_avoid_screen.dart';
 import '../marker_data.dart';
+import '../ar_screens/coconut_creek_ar_screen.dart';
+import '../ar_screens/colombia_ar_screen.dart';
+import '../ar_screens/lima_ar_screen.dart';
+import '../ar_screens/madagascar_ar_screen.dart';
+import '../ar_screens/mumbai_ar_screen.dart';
+
+
 
 class AppRoutes {
   static const String home = '/home';
-  static const String intro1 = '/intro1'; 
-  static const String intro2 = '/intro2'; 
-  static const String intro3 = '/intro3'; 
+  static const String intro1 = '/intro1';
+  static const String intro2 = '/intro2';
+  static const String intro3 = '/intro3';
   static const String intro4 = '/intro4';
   static const String map = '/map';
   static const String moreInfo = '/more_info';
   static const String arScreen = '/ar_screen';
+  static const String coconutCreekAR = '/coconut_creek_ar';
+  static const String colombiaAR = '/colombia_ar';
+  static const String limaAR = '/lima_ar';
+  static const String madagascarAR = '/madagascar_ar';
+  static const String mumbaiAR = '/mumbai_ar';
   static const String howToAvoid = '/how_to_avoid';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -52,12 +64,22 @@ class AppRoutes {
             ),
           );
         }
-        return _errorRoute(); // Manejo de errores
-      case arScreen: 
+        return _errorRoute();
+      case arScreen:
         return MaterialPageRoute(builder: (_) => const ARScreen());
-      case howToAvoid: 
+      case coconutCreekAR:
+        return MaterialPageRoute(builder: (_) => const CoconutCreekARScreen());
+      case colombiaAR:
+        return MaterialPageRoute(builder: (_) => const ColombiaARScreen());
+      case limaAR:
+        return MaterialPageRoute(builder: (_) => const LimaARScreen());
+      case madagascarAR:
+        return MaterialPageRoute(builder: (_) => const MadagascarARScreen());
+      case mumbaiAR:
+        return MaterialPageRoute(builder: (_) => const MumbaiARScreen());
+      case howToAvoid:
         if (settings.arguments is Map<String, dynamic>) {
-          final args = settings.arguments as Map<String, dynamic>; 
+          final args = settings.arguments as Map<String, dynamic>;
           return MaterialPageRoute(
             builder: (_) => HowToAvoidScreen(
               title: args['title'],
@@ -73,7 +95,7 @@ class AppRoutes {
         }
         return _errorRoute();
       default:
-        return _errorRoute(); 
+        return _errorRoute();
     }
   }
 
@@ -86,3 +108,5 @@ class AppRoutes {
     );
   }
 }
+
+//delhi

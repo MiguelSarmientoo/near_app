@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:near_app/screens/routes/app_routes.dart'; // Asegúrate de tener la importación correcta
-import 'package:latlong2/latlong.dart'; // Importar LatLng si es necesario
+import 'package:near_app/screens/routes/app_routes.dart'; // Ensure correct import
+import 'package:latlong2/latlong.dart'; // Import LatLng if needed
 
 class MoreInformationScreen extends StatefulWidget {
   final String title;
   final double latitude;
   final double longitude;
   final String description;
-  final String image; // Imagen actual
-  final String pastImage; // Imagen del pasado
-  final String futureImage; // Imagen del futuro
+  final String image; // Current image
+  final String pastImage; // Past image
+  final String futureImage; // Future image
   final String howtoavoid;
 
   const MoreInformationScreen({
@@ -30,7 +30,7 @@ class MoreInformationScreen extends StatefulWidget {
 
 class _MoreInformationScreenState extends State<MoreInformationScreen> {
   late PageController _pageController;
-  int _currentPage = 1; // Comenzamos en la imagen actual (índice 1)
+  int _currentPage = 1; // Start at the current image (index 1)
 
   @override
   void initState() {
@@ -45,19 +45,19 @@ class _MoreInformationScreenState extends State<MoreInformationScreen> {
   }
 
   void _nextPage() {
-    if (_currentPage < 2) { // Solo dos páginas después de la actual
+    if (_currentPage < 2) { // Only two pages after the current
       _currentPage++;
       _pageController.animateToPage(_currentPage,
-          duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+          duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
       setState(() {});
     }
   }
 
   void _previousPage() {
-    if (_currentPage > 0) { // Solo dos páginas antes de la actual
+    if (_currentPage > 0) { // Only two pages before the current
       _currentPage--;
       _pageController.animateToPage(_currentPage,
-          duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+          duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
       setState(() {});
     }
   }
@@ -95,7 +95,7 @@ class _MoreInformationScreenState extends State<MoreInformationScreen> {
               ),
             ),
           ),
-          Padding(
+          SingleChildScrollView( // Wrap the content in a SingleChildScrollView
             padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -132,9 +132,9 @@ class _MoreInformationScreenState extends State<MoreInformationScreen> {
                   ),
                 ),
                 const SizedBox(height: 30),
-                // Galería de imágenes
+                // Image gallery
                 SizedBox(
-                  height: 200, // Altura de la galería
+                  height: 200, // Gallery height
                   child: Stack(
                     children: [
                       PageView(
@@ -159,7 +159,7 @@ class _MoreInformationScreenState extends State<MoreInformationScreen> {
                           style: ElevatedButton.styleFrom(
                             shape: const CircleBorder(),
                             padding: const EdgeInsets.all(10),
-                            backgroundColor: Colors.black54, // Fondo del botón
+                            backgroundColor: Colors.black54,
                           ),
                         ),
                       ),
@@ -172,7 +172,7 @@ class _MoreInformationScreenState extends State<MoreInformationScreen> {
                           style: ElevatedButton.styleFrom(
                             shape: const CircleBorder(),
                             padding: const EdgeInsets.all(10),
-                            backgroundColor: Colors.black54, // Fondo del botón
+                            backgroundColor: Colors.black54,
                           ),
                         ),
                       ),
@@ -185,7 +185,6 @@ class _MoreInformationScreenState extends State<MoreInformationScreen> {
                   children: [
                     ElevatedButton(
                       onPressed: () {
-                        // Asegúrate de que la ruta para 'how_to_avoid.dart' esté definida en app_routes.dart
                         Navigator.pushNamed(
                           context,
                           AppRoutes.howToAvoid,
@@ -198,7 +197,7 @@ class _MoreInformationScreenState extends State<MoreInformationScreen> {
                             'pastImage': widget.pastImage,
                             'futureImage': widget.futureImage,
                             'howtoavoid': widget.howtoavoid,
-                          }, 
+                          },
                         );
                       },
                       style: ElevatedButton.styleFrom(
@@ -216,11 +215,28 @@ class _MoreInformationScreenState extends State<MoreInformationScreen> {
                     const SizedBox(height: 10),
                     ElevatedButton(
                       onPressed: () {
-                        Navigator.pushNamed(
-                          context,
-                          AppRoutes.arScreen,
-                          arguments: widget.title, // Pass the location name
-                        );
+                        String route = '';
+                        switch (widget.title.toLowerCase()) {
+                          case 'coconut creek':
+                            route = AppRoutes.coconutCreekAR;
+                            break;
+                          case 'colombia':
+                            route = AppRoutes.colombiaAR;
+                            break;
+                          case 'lima':
+                            route = AppRoutes.limaAR;
+                            break;
+                          case 'madagascar':
+                            route = AppRoutes.madagascarAR;
+                            break;
+                          case 'mumbai':
+                            route = AppRoutes.mumbaiAR;
+                            break;
+                          default:
+                            route = AppRoutes.arScreen;
+                        }
+
+                        Navigator.pushNamed(context, route);
                       },
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.all(15),
@@ -245,7 +261,6 @@ class _MoreInformationScreenState extends State<MoreInformationScreen> {
     );
   }
 
-  // Método para construir una página de imagen de fondo
   Widget _buildBackgroundImage(String imagePath, String label) {
     return Stack(
       fit: StackFit.expand,
