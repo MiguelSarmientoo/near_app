@@ -82,50 +82,53 @@ class _MapScreenState extends State<MapScreen> {
     }
   }
 
-  void _showPlaceInfo(LatLng point, String title) {
-    final marker = widget.markers.firstWhere((m) => m.title == title);
+void _showPlaceInfo(LatLng point, String title) {
+  final marker = widget.markers.firstWhere((m) => m.title == title);
 
-    showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return Container(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                marker.title,
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 10),
-              Image.asset(marker.image, height: 100),
-              SizedBox(height: 10),
-              Text('Latitude: ${point.latitude}'),
-              Text('Longitude: ${point.longitude}'),
-              SizedBox(height: 10),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pushNamed(
-                    context,
-                    AppRoutes.moreInfo,
-                    arguments: {
-                      'title': marker.title,
-                      'latitude': point.latitude,
-                      'longitude': point.longitude,
-                      'description': marker.description,
-                      'image': marker.image,
-                    },
-                  );
-                },
-                child: Text('More Information'),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
+  showModalBottomSheet(
+    context: context,
+    builder: (context) {
+      return Container(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              marker.title,
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 10),
+            Image.asset(marker.image, height: 100),
+            SizedBox(height: 10),
+            Text('Latitude: ${point.latitude}'),
+            Text('Longitude: ${point.longitude}'),
+            SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(
+                  context,
+                  AppRoutes.moreInfo,
+                  arguments: {
+                    'title': marker.title,
+                    'latitude': point.latitude,
+                    'longitude': point.longitude,
+                    'description': marker.description,
+                    'image': marker.image,
+                    'pastImage': marker.pastImage, 
+                    'futureImage': marker.futureImage, 
+                    'howtoavoid': marker.howtoavoid,
+                  },
+                );
+              },
+              child: Text('More Information'),
+            ),
+          ],
+        ),
+      );
+    },
+  );
+}
 
   @override
   Widget build(BuildContext context) {
@@ -233,32 +236,43 @@ class _MapScreenState extends State<MapScreen> {
               ),
             ),
           ),
-          if (_suggestions.isNotEmpty)
-            Positioned(
-              top: 100,
-              left: 20,
-              right: 20,
-              child: Material(
-                elevation: 4,
-                borderRadius: BorderRadius.circular(8),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: Colors.white,
-                  ),
-                  child: Column(
-                    children: _suggestions.map((suggestion) {
-                      return ListTile(
-                        title: Text(suggestion),
-                        onTap: () {
-                          // Manejar la selección de sugerencias si es necesario
-                        },
-                      );
-                    }).toList(),
-                  ),
+        if (_suggestions.isNotEmpty)
+          Positioned(
+            top: 100,
+            left: 20,
+            right: 20,
+            child: Material(
+              elevation: 4,
+              borderRadius: BorderRadius.circular(8),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  color: Colors.white,
+                ),
+                child: Column(
+                  children: _suggestions.map((suggestion) {
+                    return ListTile(
+                      title: Text(suggestion),
+                      onTap: () {
+                        final coords = suggestion.split(', ');
+                        if (coords.length == 2) {
+                          final latitude = double.tryParse(coords[0]);
+                          final longitude = double.tryParse(coords[1]);
+                          if (latitude != null && longitude != null) {
+                            _mapController.move(LatLng(latitude, longitude), 15.0);
+                            setState(() {
+                              _searchQuery = ''; // Limpiar el campo de búsqueda
+                              _suggestions.clear(); // Limpiar las sugerencias
+                            });
+                          }
+                        }
+                      },
+                    );
+                  }).toList(),
                 ),
               ),
             ),
+          ),
           Positioned(
             top: 20,
             right: 20,

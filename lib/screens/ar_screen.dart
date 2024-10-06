@@ -34,7 +34,6 @@ class _ARScreenState extends State<ARScreen> {
       'position': Offset(350, 500), // x, y coordinates
       'info': 'Fact 5: Glacier National Park is part of the larger Waterton-Glacier International Peace Park.',
     },
-    // Add more points as needed
   ];
 
   @override

@@ -7,69 +7,82 @@ import '../intro/OnBoardingScreen3.dart';
 import '../intro/OnBoardingScreen4.dart';
 import '../map_screen.dart';
 import '../more_information.dart';
-import '../ar_screen.dart'; // Importar la nueva pantalla
-import '../marker_data.dart'; // Asegúrate de que esta importación sea correcta
-import '../ar_screens/mumbai_ar_screen.dart'; // Import your AR screens for each location
-import '../ar_screens/madagascar_ar_screen.dart';
-import '../ar_screens/colombia_ar_screen.dart';
-import '../ar_screens/coconut_creek_ar_screen.dart';
-import '../ar_screens/lima_ar_screen.dart';
+import '../ar_screen.dart';
+import '../how_to_avoid_screen.dart';
+import '../marker_data.dart';
 
 class AppRoutes {
   static const String home = '/home';
-  static const String intro1 = '/intro1';
-  static const String intro2 = '/intro2';
-  static const String intro3 = '/intro3';
+  static const String intro1 = '/intro1'; 
+  static const String intro2 = '/intro2'; 
+  static const String intro3 = '/intro3'; 
   static const String intro4 = '/intro4';
   static const String map = '/map';
   static const String moreInfo = '/more_info';
-  static const String arScreen = '/ar_screen'; // Nueva ruta para ar_screen
+  static const String arScreen = '/ar_screen';
+  static const String howToAvoid = '/how_to_avoid';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case home:
-        return MaterialPageRoute(builder: (_) => HomeScreenModule.HomeScreen());
+        return MaterialPageRoute(builder: (_) => const HomeScreenModule.HomeScreen());
       case intro1:
-        return MaterialPageRoute(builder: (_) => OnboardingScreen1());
+        return MaterialPageRoute(builder: (_) => const OnboardingScreen1());
       case intro2:
-        return MaterialPageRoute(builder: (_) => OnboardingScreen2());
+        return MaterialPageRoute(builder: (_) => const OnboardingScreen2());
       case intro3:
-        return MaterialPageRoute(builder: (_) => OnboardingScreen3());
+        return MaterialPageRoute(builder: (_) => const OnboardingScreen3());
       case intro4:
-        return MaterialPageRoute(builder: (_) => OnboardingScreen4());
+        return MaterialPageRoute(builder: (_) => const OnboardingScreen4());
       case map:
-        return MaterialPageRoute(
-          builder: (_) => MapScreen(markers: markers), // Asegúrate de usar 'markers'
-        );
+        return MaterialPageRoute(builder: (_) => MapScreen(markers: markers));
       case moreInfo:
-        final args = settings.arguments as Map<String, dynamic>;
-        return MaterialPageRoute(
-          builder: (_) => MoreInformationScreen(
-            title: args['title'],
-            latitude: args['latitude'],
-            longitude: args['longitude'],
-            description: args['description'],
-            image: args['image'],
-          ),
-        );
-      case arScreen: // Manejar la nueva ruta
-        final locationName = settings.arguments as String;
-        switch (locationName) {
-          case 'Mumbai':
-            return MaterialPageRoute(builder: (_) => const MumbaiARScreen());
-          case 'Madagascar':
-            return MaterialPageRoute(builder: (_) => const MadagascarARScreen());
-          case 'Colombia':
-            return MaterialPageRoute(builder: (_) => const ColombiaARScreen());
-          case 'Coconut Creek':
-            return MaterialPageRoute(builder: (_) => const CoconutCreekARScreen());
-          case 'Lima, Peru':
-            return MaterialPageRoute(builder: (_) => const LimaARScreen());
-          default:
-            return MaterialPageRoute(builder: (_) => const LimaARScreen()); // Handle a default case if needed
+        if (settings.arguments is Map<String, dynamic>) {
+          final args = settings.arguments as Map<String, dynamic>;
+          return MaterialPageRoute(
+            builder: (_) => MoreInformationScreen(
+              title: args['title'],
+              latitude: args['latitude'],
+              longitude: args['longitude'],
+              description: args['description'],
+              image: args['image'],
+              pastImage: args['pastImage'],
+              futureImage: args['futureImage'],
+              howtoavoid: args['howtoavoid'],
+            ),
+          );
         }
+        return _errorRoute(); // Manejo de errores
+      case arScreen: 
+        return MaterialPageRoute(builder: (_) => const ARScreen());
+      case howToAvoid: 
+        if (settings.arguments is Map<String, dynamic>) {
+          final args = settings.arguments as Map<String, dynamic>; 
+          return MaterialPageRoute(
+            builder: (_) => HowToAvoidScreen(
+              title: args['title'],
+              latitude: args['latitude'],
+              longitude: args['longitude'],
+              description: args['description'],
+              image: args['image'],
+              pastImage: args['pastImage'],
+              futureImage: args['futureImage'],
+              howtoavoid: args['howtoavoid'],
+            ),
+          );
+        }
+        return _errorRoute(); // Manejo de errores
       default:
-        return MaterialPageRoute(builder: (_) => OnboardingScreen1());
+        return _errorRoute(); // Manejo de errores
     }
+  }
+
+  static Route<dynamic> _errorRoute() {
+    return MaterialPageRoute(
+      builder: (_) => Scaffold(
+        appBar: AppBar(title: const Text('Error')),
+        body: const Center(child: Text('No se encontró la ruta')),
+      ),
+    );
   }
 }

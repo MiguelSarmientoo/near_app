@@ -1,12 +1,17 @@
+// lib/screens/more_information.dart
 import 'package:flutter/material.dart';
 import 'package:near_app/screens/routes/app_routes.dart'; // Asegúrate de tener la importación correcta
+import 'package:latlong2/latlong.dart'; // Importar LatLng si es necesario
 
-class MoreInformationScreen extends StatelessWidget {
+class MoreInformationScreen extends StatefulWidget {
   final String title;
   final double latitude;
   final double longitude;
   final String description;
-  final String image;
+  final String image; // Imagen actual
+  final String pastImage; // Imagen del pasado
+  final String futureImage; // Imagen del futuro
+  final String howtoavoid;
 
   const MoreInformationScreen({
     super.key,
@@ -15,7 +20,48 @@ class MoreInformationScreen extends StatelessWidget {
     required this.longitude,
     required this.description,
     required this.image,
+    required this.pastImage,
+    required this.futureImage,
+    required this.howtoavoid,
   });
+
+  @override
+  _MoreInformationScreenState createState() => _MoreInformationScreenState();
+}
+
+class _MoreInformationScreenState extends State<MoreInformationScreen> {
+  late PageController _pageController; // Marcamos como 'late'
+  int _currentPage = 1; // Comenzamos en la imagen actual (índice 1)
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(initialPage: _currentPage);
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  void _nextPage() {
+    if (_currentPage < 2) { // Solo dos páginas después de la actual
+      _currentPage++;
+      _pageController.animateToPage(_currentPage,
+          duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+      setState(() {});
+    }
+  }
+
+  void _previousPage() {
+    if (_currentPage > 0) { // Solo dos páginas antes de la actual
+      _currentPage--;
+      _pageController.animateToPage(_currentPage,
+          duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+      setState(() {});
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +79,7 @@ class MoreInformationScreen extends StatelessWidget {
         children: [
           Positioned.fill(
             child: Image.asset(
-              image,
+              widget.image,
               fit: BoxFit.cover,
             ),
           ),
@@ -59,7 +105,7 @@ class MoreInformationScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  title,
+                  widget.title,
                   style: const TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
@@ -72,7 +118,7 @@ class MoreInformationScreen extends StatelessWidget {
                     const Icon(Icons.location_on, color: Colors.white),
                     const SizedBox(width: 5),
                     Text(
-                      'Lat: $latitude, Long: $longitude',
+                      'Lat: ${widget.latitude}, Long: ${widget.longitude}',
                       style: const TextStyle(
                         fontSize: 16,
                         color: Colors.white,
@@ -82,10 +128,57 @@ class MoreInformationScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 20),
                 Text(
-                  description,
+                  widget.description,
                   style: const TextStyle(
                     fontSize: 16,
                     color: Colors.white,
+                  ),
+                ),
+                const SizedBox(height: 30),
+                // Galería de imágenes
+                SizedBox(
+                  height: 200, // Altura de la galería
+                  child: Stack(
+                    children: [
+                      PageView(
+                        controller: _pageController,
+                        onPageChanged: (index) {
+                          _currentPage = index;
+                          setState(() {});
+                        },
+                        children: [
+                          _buildBackgroundImage(widget.pastImage),
+                          _buildBackgroundImage(widget.image),
+                          _buildBackgroundImage(widget.futureImage),
+                        ],
+                      ),
+                      Positioned(
+                        left: 10,
+                        bottom: 10,
+                        child: ElevatedButton(
+                          onPressed: _previousPage,
+                          child: const Icon(Icons.arrow_left),
+                          style: ElevatedButton.styleFrom(
+                            shape: const CircleBorder(),
+                            padding: const EdgeInsets.all(10),
+                            backgroundColor: Colors.black54, // Fondo del botón
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        right: 10,
+                        bottom: 10,
+                        child: ElevatedButton(
+                          onPressed: _nextPage,
+                          child: const Icon(Icons.arrow_right),
+                          style: ElevatedButton.styleFrom(
+                            shape: const CircleBorder(),
+                            padding: const EdgeInsets.all(10),
+                            backgroundColor: Colors.black54, // Fondo del botón
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 const SizedBox(height: 30),
@@ -93,7 +186,23 @@ class MoreInformationScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        // Asegúrate de que la ruta para 'how_to_avoid.dart' esté definida en app_routes.dart
+                        Navigator.pushNamed(
+                          context,
+                          AppRoutes.howToAvoid,
+                          arguments: {
+                            'title': widget.title,
+                            'latitude': widget.latitude,
+                            'longitude': widget.longitude,
+                            'description': widget.description,
+                            'image': widget.image,
+                            'pastImage': widget.pastImage,
+                            'futureImage': widget.futureImage,
+                            'howtoavoid': widget.howtoavoid,
+                          }, // Pasamos los argumentos necesarios
+                        );
+                      },
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.all(15),
                         backgroundColor: const Color.fromARGB(169, 147, 90, 212),
@@ -112,7 +221,7 @@ class MoreInformationScreen extends StatelessWidget {
                         Navigator.pushNamed(
                           context,
                           AppRoutes.arScreen,
-                          arguments: title, // Pass the location name
+                          arguments: widget.title, // Pass the location name
                         );
                       },
                       style: ElevatedButton.styleFrom(
@@ -134,6 +243,16 @@ class MoreInformationScreen extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  // Método para construir una página de imagen de fondo
+  Widget _buildBackgroundImage(String imagePath) {
+    return Positioned.fill(
+      child: Image.asset(
+        imagePath,
+        fit: BoxFit.cover,
       ),
     );
   }
